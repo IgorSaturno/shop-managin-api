@@ -32,9 +32,9 @@ CREATE TABLE "discount_coupons" (
 	"discount_coupon_id" text PRIMARY KEY NOT NULL,
 	"code" varchar(20) NOT NULL,
 	"discount_type" varchar NOT NULL,
-	"discount_value" numeric(10, 2) NOT NULL,
-	"minimum_order" numeric(10, 2) DEFAULT '0',
-	"max_uses" integer,
+	"discount_value" integer NOT NULL,
+	"minimum_order" integer DEFAULT 0,
+	"max_uses" integer NOT NULL,
 	"used_count" integer DEFAULT 0,
 	"valid_from" timestamp DEFAULT now(),
 	"valid_until" timestamp NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE "discount_coupons" (
 	"store_id" text NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now(),
-	CONSTRAINT "discount_coupons_code_unique" UNIQUE("code")
+	CONSTRAINT "unique_code_per_store" UNIQUE("code","store_id")
 );
 --> statement-breakpoint
 CREATE TABLE "discount_coupon_to_products" (

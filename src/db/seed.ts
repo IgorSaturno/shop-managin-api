@@ -189,7 +189,7 @@ console.log(chalk.yellow("✔ Created brands!"));
 const availableProducts = await db
   .insert(products)
   .values(
-    Array.from({ length: 10 }).map(() => ({
+    Array.from({ length: 20 }).map(() => ({
       product_name: faker.commerce.productName(),
       description: faker.commerce.productDescription(),
       characteristics: faker.lorem.sentence(),
@@ -292,7 +292,7 @@ console.log(
  */
 const productImagesToInsert = [];
 for (const product of availableProducts) {
-  const numImages = faker.number.int({ min: 1, max: 3 });
+  const numImages = faker.number.int({ min: 1, max: 4 });
   for (let i = 0; i < numImages; i++) {
     productImagesToInsert.push({
       id: createId(), // Se necessário
@@ -318,23 +318,13 @@ console.log(
 const availableCoupons = await db
   .insert(discountCoupon)
   .values(
-    Array.from({ length: 5 }).map(() => ({
+    Array.from({ length: 20 }).map(() => ({
       code: faker.string.alphanumeric(6).toUpperCase(),
       discountType: faker.helpers.arrayElement(["percentage", "fixed"]),
-      discountValue: faker.number
-        .float({
-          min: 5,
-          max: 50,
-          fractionDigits: 2,
-        })
-        .toFixed(2), // ✅ Converte para string com 2 casas decimais
-      minimumOrder: faker.number
-        .float({
-          min: 50,
-          max: 500,
-          fractionDigits: 2,
-        })
-        .toFixed(2), // ✅ Converte para string com 2 casas decimais
+      // inteiros em centavos: por exemplo, entre R$ 5,00 (500) e R$ 50,00 (5000)
+      discountValue: faker.number.int({ min: 500, max: 5000 }),
+      // mínimo de pedido em centavos, por exemplo R$ 10,00 a R$ 200,00
+      minimumOrder: faker.number.int({ min: 1000, max: 20000 }),
       maxUses: faker.number.int({ min: 10, max: 100 }),
       validFrom: faker.date.recent({ days: 7 }),
       validUntil: faker.date.soon({ days: 30 }),

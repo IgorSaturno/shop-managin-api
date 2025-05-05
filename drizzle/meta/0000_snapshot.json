@@ -1,5 +1,5 @@
 {
-  "id": "939a225a-a64e-48cf-a975-06781bfe2937",
+  "id": "81358ac0-de7f-4622-b454-40b012a8faa1",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -246,22 +246,22 @@
         },
         "discount_value": {
           "name": "discount_value",
-          "type": "numeric(10, 2)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
         "minimum_order": {
           "name": "minimum_order",
-          "type": "numeric(10, 2)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
-          "default": "'0'"
+          "default": 0
         },
         "max_uses": {
           "name": "max_uses",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "used_count": {
           "name": "used_count",
@@ -329,11 +329,12 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "discount_coupons_code_unique": {
-          "name": "discount_coupons_code_unique",
+        "unique_code_per_store": {
+          "name": "unique_code_per_store",
           "nullsNotDistinct": false,
           "columns": [
-            "code"
+            "code",
+            "store_id"
           ]
         }
       },

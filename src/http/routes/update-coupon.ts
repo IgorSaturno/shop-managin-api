@@ -42,15 +42,25 @@ export const updateCoupon = new Elysia().use(auth).patch(
       }
     }
 
+    const newValueCents =
+      body.discountValue != null
+        ? Math.round(body.discountValue * 100)
+        : existingCoupon.discountValue;
+
+    const newMinOrderCents =
+      body.minimumOrder != null
+        ? Math.round(parseFloat(body.minimumOrder!) * 100)
+        : existingCoupon.minimumOrder;
+
     // Atualiza apenas os campos fornecidos
     const [updatedCoupon] = await db
       .update(discountCoupon)
       .set({
         code: body.code ?? existingCoupon.code,
         discountType: body.discountType ?? existingCoupon.discountType,
-        discountValue:
-          body.discountValue?.toString() ?? existingCoupon.discountValue,
-        minimumOrder: body.minimumOrder,
+        discountValue: newValueCents,
+        minimumOrder: newMinOrderCents,
+        maxUses: body.maxUses ?? existingCoupon.maxUses,
         validFrom: body.validFrom
           ? new Date(body.validFrom)
           : existingCoupon.validFrom,
@@ -59,7 +69,6 @@ export const updateCoupon = new Elysia().use(auth).patch(
           : existingCoupon.validUntil,
         active: body.active ?? existingCoupon.active,
         updatedAt: new Date(),
-        createdAt: new Date(),
       })
       .where(
         and(

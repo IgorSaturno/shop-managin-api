@@ -3,7 +3,6 @@ import {
   pgTable,
   text,
   varchar,
-  numeric,
   integer,
   timestamp,
   boolean,
@@ -25,14 +24,9 @@ export const discountCoupon = pgTable(
     discountType: varchar("discount_type", {
       enum: ["percentage", "fixed"],
     }).notNull(),
-    discountValue: numeric("discount_value", {
-      precision: 10,
-      scale: 2,
-    }).notNull(),
-    minimumOrder: numeric("minimum_order", { precision: 10, scale: 2 }).default(
-      "0"
-    ),
-    maxUses: integer("max_uses"),
+    discountValue: integer("discount_value").notNull(),
+    minimumOrder: integer("minimum_order").default(0),
+    maxUses: integer("max_uses").notNull(),
     usedCount: integer("used_count").default(0),
     validFrom: timestamp("valid_from", { mode: "date" }).defaultNow(),
     validUntil: timestamp("valid_until", { mode: "date" }).notNull(),
