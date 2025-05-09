@@ -23,7 +23,6 @@ export const products = pgTable("products", {
   description: text("description").notNull(),
   characteristics: text("characteristics").notNull(),
   priceInCents: integer("price_in_cents").notNull(),
-  sku: text("sku").unique(), // Adicionei SKU (Stock Keeping Unit)
   stock: integer("stock").default(0).notNull(), // Controle de estoque
   isFeatured: boolean("is_featured").default(false).notNull(), // Destaque
   isArchived: boolean("is_archived").default(false).notNull(), // Arquivar produto

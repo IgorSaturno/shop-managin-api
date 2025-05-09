@@ -27,8 +27,18 @@ export const getProducts = new Elysia().use(auth).get(
       categoryId,
       brandId,
       tags: filterTags,
+      couponId,
       pageIndex,
-    } = query;
+    } = query as {
+      productName?: string;
+      productId?: string;
+      status?: string;
+      categoryId?: string;
+      brandId?: string;
+      tags?: string[];
+      couponId?: string;
+      pageIndex: number;
+    };
     const perPage = 10;
 
     // Constrói a query base com JOINs para categorias e marcas
@@ -39,7 +49,6 @@ export const getProducts = new Elysia().use(auth).get(
         description: products.description,
         priceInCents: products.priceInCents,
         stock: products.stock,
-        sku: products.sku,
         isFeatured: products.isFeatured,
         status: products.status,
         createdAt: products.createdAt,
@@ -86,6 +95,23 @@ export const getProducts = new Elysia().use(auth).get(
                     and(
                       eq(productTags.productId, products.product_id),
                       inArray(tags.tag_id, filterTags)
+                    )
+                  )
+              )
+            : undefined,
+
+          couponId && couponId !== "all"
+            ? exists(
+                db
+                  .select()
+                  .from(discountCouponToProducts)
+                  .where(
+                    and(
+                      eq(
+                        discountCouponToProducts.productId,
+                        products.product_id
+                      ),
+                      eq(discountCouponToProducts.couponId, couponId)
                     )
                   )
               )
@@ -166,26 +192,12 @@ export const getProducts = new Elysia().use(auth).get(
 
       productCoupons.forEach(
         ({ productId, code, discountType, discountValue }) => {
-          if (code) {
-            if (!couponsMap.has(productId)) {
-              couponsMap.set(productId, []);
-            }
-
-            const type = discountType.toLowerCase() as "percentage" | "fixed";
-
-            if (!["percentage", "fixed"].includes(type)) {
-              console.error(
-                `Invalid discount type: ${type} for product ${productId}`
-              );
-              return;
-            }
-
-            couponsMap.get(productId)!.push({
-              code,
-              discountType: type,
-              discountValue: Number(discountValue),
-            });
-          }
+          if (!couponsMap.has(productId)) couponsMap.set(productId, []);
+          couponsMap.get(productId)!.push({
+            code,
+            discountType: discountType.toLowerCase() as any,
+            discountValue: Number(discountValue),
+          });
         }
       );
     }
@@ -215,6 +227,7 @@ export const getProducts = new Elysia().use(auth).get(
       categoryId: t.Optional(t.String()),
       brandId: t.Optional(t.String()),
       tags: t.Optional(t.Array(t.String())),
+      couponId: t.Optional(t.String()),
       pageIndex: t.Numeric({ minimum: 0 }),
     }),
   }
