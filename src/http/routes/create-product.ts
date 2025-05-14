@@ -73,11 +73,24 @@ export const createProduct = new Elysia().use(auth).post(
         // 3) vincula imagens
         if (images.length > 0) {
           await tx.insert(productImages).values(
-            images.map((url: string, idx: number) => ({
-              productId,
-              url,
-              order: idx,
-            }))
+            images.map(
+              (
+                image: {
+                  original: string;
+                  optimized: string;
+                  thumbnail: string;
+                },
+                idx: number
+              ) => ({
+                id: createId(),
+                productId,
+                originalUrl: image.original,
+                optimizedUrl: image.optimized,
+                thumbnailUrl: image.thumbnail,
+                order: idx,
+                createdAt: new Date(),
+              })
+            )
           );
         }
 
@@ -126,7 +139,15 @@ export const createProduct = new Elysia().use(auth).post(
       isArchived: t.Optional(t.Boolean()),
       sku: t.Optional(t.String()),
       tags: t.Optional(t.Array(t.String())),
-      images: t.Optional(t.Array(t.String())),
+      images: t.Optional(
+        t.Array(
+          t.Object({
+            original: t.String(),
+            optimized: t.String(),
+            thumbnail: t.String(),
+          })
+        )
+      ),
       couponIds: t.Optional(t.Array(t.String())),
     }),
   }

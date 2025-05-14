@@ -1,5 +1,5 @@
 {
-  "id": "81358ac0-de7f-4622-b454-40b012a8faa1",
+  "id": "373bef9b-f6a8-4993-8947-721c4a11d71b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -643,11 +643,23 @@
           "primaryKey": true,
           "notNull": true
         },
-        "url": {
-          "name": "url",
+        "original_url": {
+          "name": "original_url",
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "optimized_url": {
+          "name": "optimized_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "thumbnail_url": {
+          "name": "thumbnail_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "product_id": {
           "name": "product_id",
@@ -771,12 +783,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "sku": {
-          "name": "sku",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "stock": {
           "name": "stock",
           "type": "integer",
@@ -881,15 +887,7 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "products_sku_unique": {
-          "name": "products_sku_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "sku"
-          ]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false

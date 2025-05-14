@@ -80,7 +80,9 @@ CREATE TABLE "product_categories" (
 --> statement-breakpoint
 CREATE TABLE "product_images" (
 	"id" text PRIMARY KEY NOT NULL,
-	"url" text NOT NULL,
+	"original_url" text NOT NULL,
+	"optimized_url" text NOT NULL,
+	"thumbnail_url" text,
 	"product_id" text NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL
 );
@@ -96,7 +98,6 @@ CREATE TABLE "products" (
 	"description" text NOT NULL,
 	"characteristics" text NOT NULL,
 	"price_in_cents" integer NOT NULL,
-	"sku" text,
 	"stock" integer DEFAULT 0 NOT NULL,
 	"is_featured" boolean DEFAULT false NOT NULL,
 	"is_archived" boolean DEFAULT false NOT NULL,
@@ -105,8 +106,7 @@ CREATE TABLE "products" (
 	"brand_id" text,
 	"store_id" text NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL,
-	CONSTRAINT "products_sku_unique" UNIQUE("sku")
+	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "stores" (

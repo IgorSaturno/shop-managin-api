@@ -41,6 +41,7 @@ import { validateCoupon } from "./routes/validate-coupons";
 import { deleteCoupon } from "./routes/delete-coupon";
 import { updateCoupon } from "./routes/update-coupon";
 import { createProduct } from "./routes/create-product";
+import { uploadImages } from "./routes/upload-images";
 
 const app = new Elysia().use(cors({ origin: "http://localhost:5173" }));
 
@@ -86,11 +87,13 @@ const routes = [
   updateCoupon,
   validateCoupon,
   createProduct,
+  uploadImages,
 ] as const;
 
 routes.forEach((route) => app.use(route));
 
 app.onError(({ code, error, set }) => {
+  console.error("⚠️ onError:", code, error);
   switch (code) {
     case "VALIDATION": {
       set.status = error.status;

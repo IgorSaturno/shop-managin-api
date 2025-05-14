@@ -7,7 +7,9 @@ export const productImages = pgTable("product_images", {
   id: text("id")
     .$defaultFn(() => createId())
     .primaryKey(),
-  url: text("url").notNull(),
+  originalUrl: text("original_url").notNull(),
+  optimizedUrl: text("optimized_url").notNull(),
+  thumbnailUrl: text("thumbnail_url"),
   productId: text("product_id")
     .notNull()
     .references(() => products.product_id, {

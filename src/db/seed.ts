@@ -294,14 +294,18 @@ const productImagesToInsert = [];
 for (const product of availableProducts) {
   const numImages = faker.number.int({ min: 1, max: 4 });
   for (let i = 0; i < numImages; i++) {
+    const imageUrl = faker.image.urlLoremFlickr({
+      category: "product",
+      width: 640,
+      height: 480,
+    });
+
     productImagesToInsert.push({
       id: createId(), // Se necessário
       productId: product.product_id,
-      url: faker.image.urlLoremFlickr({
-        category: "product",
-        width: 640,
-        height: 480,
-      }),
+      originalUrl: imageUrl,
+      optimizedUrl: imageUrl, // Assuming the same URL for simplicity
+      thumbnailUrl: imageUrl, // Assuming the same URL for simplicity
       altText: faker.lorem.sentence(),
       createdAt: new Date(),
     });

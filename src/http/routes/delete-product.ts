@@ -3,6 +3,7 @@ import { auth } from "../auth";
 import { db } from "../../db/connection";
 import { products } from "../../db/schema";
 import { and, eq } from "drizzle-orm";
+import { deleteProductImages } from "../../lib/delete-product-images";
 
 export const deleteProduct = new Elysia().use(auth).delete(
   "/products/:productId",
@@ -26,6 +27,8 @@ export const deleteProduct = new Elysia().use(auth).delete(
       return { message: "Product not found" };
     }
 
+    await deleteProductImages(params.productId);
+
     // Deleta o produto
     await db.delete(products).where(eq(products.product_id, params.productId));
 
@@ -35,5 +38,13 @@ export const deleteProduct = new Elysia().use(auth).delete(
     params: t.Object({
       productId: t.String(),
     }),
+    response: {
+      200: t.Object({
+        success: t.Boolean(),
+      }),
+      404: t.Object({
+        message: t.String(),
+      }),
+    },
   }
 );

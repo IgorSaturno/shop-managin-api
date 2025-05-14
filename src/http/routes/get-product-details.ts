@@ -50,7 +50,10 @@ export const getProductDetails = new Elysia().use(auth).get(
 
     // Busca as imagens (limitando a 4)
     const imagesData = await db
-      .select({ url: productImages.url })
+      .select({
+        optimizedUrl: productImages.optimizedUrl,
+        thumbnailUrl: productImages.thumbnailUrl,
+      })
       .from(productImages)
       .where(eq(productImages.productId, productId))
       .limit(4);
@@ -109,7 +112,10 @@ export const getProductDetails = new Elysia().use(auth).get(
       brandId: brandData ? brandData.brandId : "",
       coupons: couponsData.map((coupon) => coupon.code),
       tags: tagsData.map((tag) => tag.tagName),
-      images: imagesData.map((img) => img.url),
+      images: imagesData.map((img) => ({
+        optimized: img.optimizedUrl, // Novo formato de retorno
+        thumbnail: img.thumbnailUrl, // Novo campo
+      })),
       createdAt: product.createdAt,
     };
   },
